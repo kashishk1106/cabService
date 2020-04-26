@@ -8,9 +8,10 @@ import lombok.ToString;
 
 @Getter
 @Setter
+@NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class ExceptionResponse extends RuntimeException{
+public class ExceptionResponse{
 
 	String status;
 	

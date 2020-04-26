@@ -3,6 +3,8 @@ package com.codejudge.cab.response;
 import java.math.BigDecimal;
 import java.util.UUID;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Getter;
@@ -18,6 +20,7 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @ToString
+@JsonInclude(Include. NON_NULL)
 public class RegisterResponseDTO {
 	
 	@JsonProperty("id")

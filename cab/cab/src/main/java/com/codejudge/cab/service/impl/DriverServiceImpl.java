@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.codejudge.cab.exceptionhandler.CustomException;
 import com.codejudge.cab.request.Location;
 import com.codejudge.cab.request.RegisterRequestDTO;
 import com.codejudge.cab.response.AvailableCabs;
@@ -19,15 +20,16 @@ public class DriverServiceImpl implements DriverService {
 	static ArrayList<RegisterResponseDTO> drivers=new ArrayList<>();
 	static ArrayList<Location> locations=new ArrayList<>();
 	
-	public RegisterResponseDTO getRegister(RegisterRequestDTO request) throws ExceptionResponse {
+	public RegisterResponseDTO getRegister(RegisterRequestDTO request){
 		RegisterResponseDTO response=convert(request);
 		ArrayList<RegisterResponseDTO> checkExisting=(ArrayList<RegisterResponseDTO>) drivers.stream()
-				.filter(driver->driver.getPhoneNumber().equals(response.getPhoneNumber()))
+				.filter(driver->driver.getPhoneNumber().equals(response.getPhoneNumber())&&driver.getCarNumber().equals(response.getCarNumber()))
+				.filter(driver->driver.getEmail().equals(response.getEmail())&&driver.getLicenseNumber().equals(response.getLicenseNumber()))			
 				.collect(Collectors.toList());
 		if(checkExisting.isEmpty())
 			drivers.add(response);
 		else	
-			throw new ExceptionResponse("Fail","fail");
+			throw new CustomException("Record Already exist");
 		return response;
 	}
 
@@ -43,7 +45,7 @@ public class DriverServiceImpl implements DriverService {
 	}
 
 	@Override
-	public HttpStatus saveLocation(Location location) throws ExceptionResponse {
+	public HttpStatus saveLocation(Location location) {
 		ArrayList<RegisterResponseDTO> checkExisting=(ArrayList<RegisterResponseDTO>) drivers.stream()
 				.filter(driver->driver.getId().equals(location.getId()))
 				.collect(Collectors.toList());
@@ -51,8 +53,8 @@ public class DriverServiceImpl implements DriverService {
 			locations.add(location);
 			return HttpStatus.ACCEPTED;
 		}
-		else
-			throw new ExceptionResponse("Fail","fail");
+		else	
+			throw new CustomException("Location Already Exist");
 	}
 
 	@Override
